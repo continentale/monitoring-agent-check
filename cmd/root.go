@@ -11,11 +11,15 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var (
-	filter string
-	host   string
-	port   int
-	secure bool
-	token  string
+	filter   string
+	host     string
+	port     int
+	secure   bool
+	token    string
+	perfData bool
+
+	warning  string
+	critical string
 
 	rootCmd = &cobra.Command{
 		Use:   "monitoring-agent-check",
@@ -46,6 +50,8 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&port, "port", 20480, "Defines the filter for the request. A dot (.) Means no filter at all")
 	rootCmd.PersistentFlags().StringVar(&token, "token", ".", "Defines the filter for the request. A dot (.) Means no filter at all")
 	rootCmd.PersistentFlags().BoolVar(&secure, "secure", false, "Defines the filter for the request. A dot (.) Means no filter at all")
+
+	rootCmd.PersistentFlags().BoolVar(&perfData, "perf", false, "Defines if perfData is added to the command")
 
 	rootCmd.PersistentFlags().StringVar(&filter, "filter", "", "Defines the filter for the request. A dot (.) Means no filter at all")
 
