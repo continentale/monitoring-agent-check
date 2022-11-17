@@ -12,13 +12,30 @@ var (
 	perCPU  bool
 	cpusCmd = &cobra.Command{
 		Use:   "cpus",
-		Short: "A brief description of your command",
-		Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+		Short: "checks cpu values of the target",
+		Long: `checks the return values of the agent from the cpu endpoint
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+		example output from the agent with perCPU = false: 
+		[
+			{
+				"cpu": "cpu-total",
+				"user": 94.32,
+				"system": 76.49,
+				"idle": 17205.19,
+				"nice": 0.17,
+				"iowait": 18.29,
+				"irq": 0,
+				"softirq": 33.28,
+				"steal": 0,
+				"guest": 0,
+				"guestNice": 0
+			}
+		]
+		
+		Now you can check if you have enough cpu resources available with the cpuusage command or check the load on unix systems with the load command
+
+		./monitoring-agent cpus usage --help
+		./monitoring-agent cpus load  --help`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 		},
@@ -26,7 +43,7 @@ to quickly create a Cobra application.`,
 )
 
 func init() {
-	rootCmd.AddCommand(cpusCmd)
+	RootCmd.AddCommand(cpusCmd)
 
 	cpusCmd.PersistentFlags().BoolVar(&perCPU, "perCPU", false, "")
 }

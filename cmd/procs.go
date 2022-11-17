@@ -26,5 +26,5 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(procsCmd)
+	RootCmd.AddCommand(procsCmd)
 }
