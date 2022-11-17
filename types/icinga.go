@@ -41,15 +41,38 @@ func NewIcinga(output, warning, critical string) *Icinga {
 	return icinga
 }
 
-func (i *Icinga) Evaluate(value float64, label, longOutputOK, longOutputWarning, longOutputCritical string) {
+func (i *Icinga) Evaluate(value float64, label, longOutputOK, longOutputWarning, longOutputCritical string, verbose bool) {
+	if verbose {
+		log.Println("Icinga", i)
+		log.Println("VALUE", value)
+	}
+
 	if i.Critical.DownString == "" && i.Critical.UpString == "" {
 		// Check for value, because strings are empty
 		// Is in the range
-		if (value > i.Critical.Down && value < i.Critical.Up && i.Critical.Negate) || // is in the range with negate
-			((value <= i.Critical.Down || value >= i.Critical.Up) && !i.Critical.Negate) { // is out the range
-			// Is in the range
-			i.setStatus(2, label, longOutputCritical)
-			return
+
+		if verbose {
+			log.Println("Check for OUT the Range")
+			log.Println("value <= i.Critical.Down", value <= i.Critical.Down)
+			log.Println("value >= i.Critical.Up", value >= i.Critical.Up)
+			log.Println("(value <= i.Critical.Down || value >= i.Critical.Up)", (value <= i.Critical.Down || value >= i.Critical.Up))
+			log.Println("negate", i.Critical.Negate)
+		}
+
+		if i.Critical.Negate {
+			// negate is true, so check if value is in the range for an alert
+			if value > i.Critical.Down && value < i.Critical.Up {
+				// value is in  the range with the negate option so raise an alert
+				i.setStatus(2, label, longOutputCritical)
+				return
+			}
+		} else {
+			// negate is false, so check if value is out the range for an alert
+			if value < i.Critical.Down || value > i.Critical.Up {
+				// value is out of the range so raise an alert
+				i.setStatus(2, label, longOutputCritical)
+				return
+			}
 		}
 	}
 

@@ -7,10 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// diskCmd represents the disk command
+// cpuCmd represents the cpu command
 var (
-	disksCmd = &cobra.Command{
-		Use:   "disks",
+	perCPU  bool
+	cpusCmd = &cobra.Command{
+		Use:   "cpus",
 		Short: "A brief description of your command",
 		Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -25,7 +26,7 @@ to quickly create a Cobra application.`,
 )
 
 func init() {
-	rootCmd.AddCommand(disksCmd)
+	rootCmd.AddCommand(cpusCmd)
 
-	// disksCmd.Flags().StringVar(&onValue, "on", "usage.usedPercent", "The value on which field the value is checked")
+	cpusCmd.PersistentFlags().BoolVar(&perCPU, "perCPU", false, "")
 }

@@ -39,5 +39,6 @@ func BuildURL(secure bool, url string, port int, mode string, filter string) str
 	if filter != "" {
 		filter = "?filter=" + filter
 	}
+
 	return fmt.Sprintf("%s://%s:%d/api/v2/%s%s", protocol, url, port, mode, filter)
 }

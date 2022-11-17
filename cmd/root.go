@@ -17,9 +17,11 @@ var (
 	secure   bool
 	token    string
 	perfData bool
-
+	verbose  bool
 	warning  string
 	critical string
+	onValue  string
+	mode     string
 
 	rootCmd = &cobra.Command{
 		Use:   "monitoring-agent-check",
@@ -50,10 +52,15 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&port, "port", 20480, "Defines the filter for the request. A dot (.) Means no filter at all")
 	rootCmd.PersistentFlags().StringVar(&token, "token", ".", "Defines the filter for the request. A dot (.) Means no filter at all")
 	rootCmd.PersistentFlags().BoolVar(&secure, "secure", false, "Defines the filter for the request. A dot (.) Means no filter at all")
-
-	rootCmd.PersistentFlags().BoolVar(&perfData, "perf", false, "Defines if perfData is added to the command")
-
+	rootCmd.PersistentFlags().StringVar(&warning, "warning", "90", "The value on which field the value is checked")
+	rootCmd.PersistentFlags().StringVar(&critical, "critical", "95", "The value on which field the value is checked")
+	rootCmd.PersistentFlags().BoolVar(&perfData, "perf", true, "Defines if perfData is added to the command")
 	rootCmd.PersistentFlags().StringVar(&filter, "filter", "", "Defines the filter for the request. A dot (.) Means no filter at all")
+	rootCmd.PersistentFlags().StringVar(&mode, "mode", "", "Defines the filter for the request. A dot (.) Means no filter at all")
+
+	rootCmd.PersistentFlags().StringVar(&onValue, "on", "available", "The value on which field the value is checked")
+
+	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "Prints out debug messages for developing")
 
 	if filter == "." {
 		filter = ""
