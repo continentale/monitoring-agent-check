@@ -12,7 +12,7 @@ var (
 	count    bool
 	procsCmd = &cobra.Command{
 		Use:   "procs",
-		Short: "A brief description of your command",
+		Short: "checks if a given proc is available",
 		Long: `A longer description that spans multiple lines and likely contains examples
 	and usage of using your command. For example:
 
