@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
@@ -14,9 +13,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// modeDisksINodes represents the disks inodes command
-var modeDisksINodes = &cobra.Command{
-	Use:   "inodes",
+// readonlCmd represents the readonl command
+var readonlCmd = &cobra.Command{
+	Use:   "readonly",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -41,17 +40,21 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga("All Disks has sufficient inodes", warning, critical)
+		icinga := types.NewIcinga("No readonly filesystem detected", "1", "1")
+
+		icinga.Evaluate(
+			float64(len(disks)),
+			"Found readonly filesystems",
+			"",
+			"",
+			"",
+			verbose,
+		)
 
 		for _, value := range disks {
-			icinga.Evaluate(value.Usage.InodesUsedPercent,
-				"Some disks have not sufficient inodes",
-				fmt.Sprintf("disk '%s' fits in the range with value of %f", value.Usage.Path, value.Usage.InodesUsedPercent),
-				fmt.Sprintf("disk '%s' exceeds the limit of warning %f with value of %f", value.Usage.Path, icinga.Warning.Up, value.Usage.InodesUsedPercent),
-				fmt.Sprintf("disk '%s' exceeds the limit of critical %f with value of %f", value.Usage.Path, icinga.Critical.Up, value.Usage.InodesUsedPercent),
-				verbose,
-			)
-			icinga.AddPerfData(value.Usage.InodesUsedPercent, value.Usage.Path)
+			if utils.ArrayContains("ro", value.Details.Opts) {
+				icinga.LongPluginOutput += "Readonly disks: " + value.Details.Mountpoint + "\n"
+			}
 		}
 
 		icinga.GenerateOutput(perfData)
@@ -60,5 +63,15 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	disksCmd.AddCommand(modeDisksINodes)
+	disksCmd.AddCommand(readonlCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// readonlCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// readonlCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -41,12 +41,9 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		if filter == "" {
-			filter = "procCount"
-		}
-		icinga := types.NewIcinga(fmt.Sprintf("proc count %d", len(procs)), warning, critical)
-		icinga.AddPerfData(float64(len(procs)), filter)
-		icinga.GenerateOutput()
+		icinga := types.NewIcinga(fmt.Sprintf("proc count %d for filter %s", len(procs), filter), warning, critical)
+		icinga.AddPerfData(float64(len(procs)), fmt.Sprintf("%v", filter))
+		icinga.GenerateOutput(false)
 		os.Exit(icinga.ExitCode)
 	},
 }

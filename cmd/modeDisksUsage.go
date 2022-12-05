@@ -42,10 +42,9 @@ to quickly create a Cobra application.`,
 		}
 
 		icinga := types.NewIcinga("All Disks has sufficient space", warning, critical)
-
 		for _, value := range disks {
 			icinga.Evaluate(value.Usage.UsedPercent,
-				"Some disks have not sufficient inodes",
+				"Some disks have not sufficient disk space",
 				fmt.Sprintf("disk '%s' fits in the range with value of %f", value.Usage.Path, value.Usage.UsedPercent),
 				fmt.Sprintf("disk '%s' exceeds the limit of warning %f with value of %f", value.Usage.Path, icinga.Warning.Up, value.Usage.UsedPercent),
 				fmt.Sprintf("disk '%s' exceeds the limit of critical %f with value of %f", value.Usage.Path, icinga.Critical.Up, value.Usage.UsedPercent),
@@ -53,8 +52,7 @@ to quickly create a Cobra application.`,
 			)
 			icinga.AddPerfData(value.Usage.UsedPercent, value.Usage.Path)
 		}
-
-		icinga.GenerateOutput()
+		icinga.GenerateOutput(perfData)
 		os.Exit(icinga.ExitCode)
 	},
 }

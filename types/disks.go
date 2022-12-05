@@ -6,5 +6,5 @@ import (
 
 type Disks struct {
 	Usage   *disk.UsageStat    `json:"usage"`
-	Details disk.PartitionStat `json:"memoryPercent"`
+	Details disk.PartitionStat `json:"details"`
 }
