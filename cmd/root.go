@@ -11,7 +11,7 @@ import (
 
 // RootCmd represents the base command when called without any subcommands
 var (
-	filter   string
+	filter   []string
 	host     string
 	port     int
 	secure   bool
@@ -55,14 +55,14 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&warning, "warning", "90", "The value on which field the value is checked")
 	RootCmd.PersistentFlags().StringVar(&critical, "critical", "95", "The value on which field the value is checked")
 	RootCmd.PersistentFlags().BoolVar(&perfData, "perf", true, "Defines if perfData is added to the command")
-	RootCmd.PersistentFlags().StringVar(&filter, "filter", "", "Defines the filter for the request. A dot (.) Means no filter at all")
+	RootCmd.PersistentFlags().StringArrayVar(&filter, "filter", []string{""}, "Defines the filter for the request. A dot (.) Means no filter at all")
 	RootCmd.PersistentFlags().StringVar(&mode, "mode", "", "Defines the filter for the request. A dot (.) Means no filter at all")
 
 	RootCmd.PersistentFlags().StringVar(&onValue, "on", "available", "The value on which field the value is checked")
 
 	RootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "Prints out debug messages for developing")
 
-	if filter == "." {
-		filter = ""
+	if filter[0] == "." {
+		filter[0] = ""
 	}
 }

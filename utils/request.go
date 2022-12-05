@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
-func MakeRequest(url string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+func MakeRequest(endpoint string) ([]byte, error) {
+	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 
 	if err != nil {
 		return nil, errors.New("Unable to initialize new request: " + err.Error())
@@ -29,16 +30,28 @@ func MakeRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
-func BuildURL(secure bool, url string, port int, mode string, filter string) string {
+func BuildURL(secure bool, endpoint string, port int, mode string, filter []string) string {
 	protocol := "http"
 
 	if secure {
 		protocol = "https"
 	}
 
-	if filter != "" {
-		filter = "?filter=" + filter
+	readyFilter := ""
+
+	if filter[0] != "" {
+		for i, v := range filter {
+			escapedFilter := url.QueryEscape(v)
+
+			if i == 0 {
+				readyFilter = "?filter=" + escapedFilter
+			} else {
+				readyFilter += "&filter=" + escapedFilter
+			}
+
+		}
+
 	}
 
-	return fmt.Sprintf("%s://%s:%d/api/v2/%s%s", protocol, url, port, mode, filter)
+	return fmt.Sprintf("%s://%s:%d/api/v2/%s%s", protocol, endpoint, port, mode, readyFilter)
 }
