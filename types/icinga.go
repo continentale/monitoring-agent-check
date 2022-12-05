@@ -89,10 +89,58 @@ func (i *Icinga) Evaluate(value float64, label, longOutputOK, longOutputWarning,
 	i.setStatus(0, label, longOutputOK)
 }
 
-func (i *Icinga) GenerateOutput() {
+func (i *Icinga) InlineEvaluate(value float64, label, outputOK, outputWarning, outputCritical string, verbose bool) {
+	if verbose {
+		log.Println("Icinga", i)
+		log.Println("VALUE", value)
+	}
+
+	if i.Critical.DownString == "" && i.Critical.UpString == "" {
+		// Check for value, because strings are empty
+		// Is in the range
+
+		if verbose {
+			log.Println("Check for OUT the Range")
+			log.Println("value <= i.Critical.Down", value <= i.Critical.Down)
+			log.Println("value >= i.Critical.Up", value >= i.Critical.Up)
+			log.Println("(value <= i.Critical.Down || value >= i.Critical.Up)", (value <= i.Critical.Down || value >= i.Critical.Up))
+			log.Println("negate", i.Critical.Negate)
+		}
+
+		if i.Critical.Negate {
+			// negate is true, so check if value is in the range for an alert
+			if value > i.Critical.Down && value < i.Critical.Up {
+				// value is in  the range with the negate option so raise an alert
+				i.setStatus(2, outputCritical, "")
+				return
+			}
+		} else {
+			// negate is false, so check if value is out the range for an alert
+			if value < i.Critical.Down || value > i.Critical.Up {
+				// value is out of the range so raise an alert
+				i.setStatus(2, outputCritical, "")
+				return
+			}
+		}
+	}
+
+	if i.Warning.DownString == "" && i.Warning.UpString == "" {
+		// Check for value, because strings are empty
+		if (value > i.Warning.Down && value < i.Warning.Up && i.Warning.Negate) ||
+			(value <= i.Warning.Down && value >= i.Warning.Up && !i.Warning.Negate) {
+			// Is in the range
+			i.setStatus(1, outputWarning, "")
+			return
+		}
+	}
+
+	i.setStatus(0, outputOK, "")
+}
+
+func (i *Icinga) GenerateOutput(perfData bool) {
 	output := i.PluginOutput
 
-	if i.PerfData != "" {
+	if i.PerfData != "" && perfData {
 		output = output + " | " + i.PerfData
 	}
 
