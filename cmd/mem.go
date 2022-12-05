@@ -22,6 +22,4 @@ var (
 
 func init() {
 	RootCmd.AddCommand(memCmd)
-
-	memCmd.Flags().StringVar(&convert, "convert", "GB", "The unit in which the data is converted. Supported is KB, MB, GB, TB")
 }

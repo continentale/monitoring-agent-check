@@ -45,11 +45,11 @@ to quickly create a Cobra application.`,
 
 		icinga := types.NewIcinga(fmt.Sprintf("mem usage = %f", mem.UsedPercent), warning, critical)
 
-		icinga.Evaluate(float64(mem.UsedPercent),
+		icinga.InlineEvaluate(float64(mem.UsedPercent),
 			"mem usage has problems",
-			"",
-			"",
-			"",
+			fmt.Sprintf("mem usage %f", mem.UsedPercent),
+			fmt.Sprintf("mem usage %f", mem.UsedPercent),
+			fmt.Sprintf("mem usage %f", mem.UsedPercent),
 			verbose,
 		)
 
@@ -59,7 +59,7 @@ to quickly create a Cobra application.`,
 		}
 		icinga.ParseToPerfData(gjson.ParseBytes(jsonData))
 
-		icinga.GenerateOutput()
+		icinga.GenerateOutput(false)
 		os.Exit(icinga.ExitCode)
 	},
 }
