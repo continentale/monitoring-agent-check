@@ -9,7 +9,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/continentale/monitoring-agent-check/types"
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/spf13/cobra"
@@ -43,14 +43,13 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga(fmt.Sprintf("mem usage = %f", mem.UsedPercent), warning, critical)
+		icinga := icinga.NewIcinga(fmt.Sprintf("mem usage = %f", mem.UsedPercent), warning, critical)
 
-		icinga.InlineEvaluate(float64(mem.UsedPercent),
+		icinga.Evaluate(float64(mem.UsedPercent),
 			"mem usage has problems",
 			fmt.Sprintf("mem usage %f", mem.UsedPercent),
 			fmt.Sprintf("mem usage %f", mem.UsedPercent),
 			fmt.Sprintf("mem usage %f", mem.UsedPercent),
-			verbose,
 		)
 
 		jsonData, err := json.Marshal(mem)

@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/types"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/spf13/cobra"
@@ -40,7 +41,7 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga("No readonly filesystem detected", "1", "1")
+		icinga := icinga.NewIcinga("No readonly filesystem detected", "1", "1")
 
 		icinga.Evaluate(
 			float64(len(disks)),
@@ -48,7 +49,6 @@ to quickly create a Cobra application.`,
 			"",
 			"",
 			"",
-			verbose,
 		)
 
 		for _, value := range disks {

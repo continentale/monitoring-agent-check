@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/types"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/spf13/cobra"
@@ -41,7 +42,7 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga("All Disks has sufficient inodes", warning, critical)
+		icinga := icinga.NewIcinga("All Disks has sufficient inodes", warning, critical)
 
 		for _, value := range disks {
 			icinga.Evaluate(value.Usage.InodesUsedPercent,
@@ -49,7 +50,6 @@ to quickly create a Cobra application.`,
 				fmt.Sprintf("disk '%s' fits in the range with value of %f", value.Usage.Path, value.Usage.InodesUsedPercent),
 				fmt.Sprintf("disk '%s' exceeds the limit of warning %f with value of %f", value.Usage.Path, icinga.Warning.Up, value.Usage.InodesUsedPercent),
 				fmt.Sprintf("disk '%s' exceeds the limit of critical %f with value of %f", value.Usage.Path, icinga.Critical.Up, value.Usage.InodesUsedPercent),
-				verbose,
 			)
 			icinga.AddPerfData(value.Usage.InodesUsedPercent, value.Usage.Path)
 		}

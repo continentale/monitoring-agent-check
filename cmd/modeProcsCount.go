@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/types"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/spf13/cobra"
@@ -41,8 +43,15 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga(fmt.Sprintf("proc count %d for filter %s", len(procs), filter), warning, critical)
+		icinga := icinga.NewIcinga(fmt.Sprintf("proc count %d for filter %s", len(procs), filter), warning, critical)
 		icinga.AddPerfData(float64(len(procs)), fmt.Sprintf("%v", filter))
+		icinga.Evaluate(
+			float64(len(procs)),
+			"proc count does not match the threshold",
+			"proc count match",
+			"proc count is warning. Does not find thresholds for filter "+strings.Join(filter, ","),
+			"proc count is critical. Does not find thresholds for filter "+strings.Join(filter, ","),
+		)
 		icinga.GenerateOutput(false)
 		os.Exit(icinga.ExitCode)
 	},

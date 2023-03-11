@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/continentale/monitoring-agent-check/types"
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/shirou/gopsutil/load"
 	"github.com/spf13/cobra"
@@ -46,13 +46,12 @@ var modeCPULoad = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		icinga := types.NewIcinga("load usage is ok", warning, critical)
-		icinga.InlineEvaluate(load.Load5,
+		icinga := icinga.NewIcinga("load usage is ok", warning, critical)
+		icinga.Evaluate(load.Load5,
 			"Load value is high",
 			fmt.Sprintf("load fits in the range with value of %f", load.Load5),
 			fmt.Sprintf("load exceeds the limit of warning %f with value of %f", icinga.Warning.Up, load.Load5),
 			fmt.Sprintf("load exceeds the limit of critical %f with value of %f", icinga.Critical.Up, load.Load5),
-			verbose,
 		)
 		icinga.AddPerfData(load.Load1, "load1")
 		icinga.AddPerfData(load.Load5, "load5")

@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/types"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/spf13/cobra"
@@ -41,14 +42,13 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
-		icinga := types.NewIcinga("All Disks has sufficient space", warning, critical)
+		icinga := icinga.NewIcinga("All Disks has sufficient space", warning, critical)
 		for _, value := range disks {
-			icinga.Evaluate(value.Usage.UsedPercent,
+			icinga.MultiEvaluate(value.Usage.UsedPercent,
 				"Some disks have not sufficient disk space",
 				fmt.Sprintf("disk '%s' fits in the range with value of %f", value.Usage.Path, value.Usage.UsedPercent),
-				fmt.Sprintf("disk '%s' exceeds the limit of warning %f with value of %f", value.Usage.Path, icinga.Warning.Up, value.Usage.UsedPercent),
-				fmt.Sprintf("disk '%s' exceeds the limit of critical %f with value of %f", value.Usage.Path, icinga.Critical.Up, value.Usage.UsedPercent),
-				verbose,
+				fmt.Sprintf("disk '%s' exceeds the threshold of warning '%s' with value of %f", value.Usage.Path, icinga.Warning.Raw, value.Usage.UsedPercent),
+				fmt.Sprintf("disk '%s' exceeds the threshold of critical '%s' with value of %f", value.Usage.Path, icinga.Critical.Raw, value.Usage.UsedPercent),
 			)
 			icinga.AddPerfData(value.Usage.UsedPercent, value.Usage.Path)
 		}

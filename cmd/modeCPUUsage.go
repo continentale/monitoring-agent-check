@@ -9,6 +9,7 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/types"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/spf13/cobra"
@@ -42,7 +43,7 @@ var modeCPUUsage = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		icinga := types.NewIcinga("CPU usage: ", warning, critical)
+		icinga := icinga.NewIcinga("CPU usage: ", warning, critical)
 
 		for _, value := range cpus {
 			icinga.Evaluate(value.Usage,
@@ -50,7 +51,6 @@ var modeCPUUsage = &cobra.Command{
 				fmt.Sprintf("cpu '%s' fits in the range with value of %f", value.TimeStat.CPU, value.Usage),
 				fmt.Sprintf("cpu '%s' exceeds the limit of warning %f with value of %f", value.TimeStat.CPU, icinga.Warning.Up, value.Usage),
 				fmt.Sprintf("cpu '%s' exceeds the limit of critical %f with value of %f", value.TimeStat.CPU, icinga.Critical.Up, value.Usage),
-				verbose,
 			)
 			icinga.AddPerfData(value.Usage, value.TimeStat.CPU)
 		}

@@ -9,7 +9,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/continentale/monitoring-agent-check/types"
+	"github.com/continentale/monitoring-agent-check/icinga"
 	"github.com/continentale/monitoring-agent-check/utils"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/spf13/cobra"
@@ -44,14 +44,13 @@ to quickly create a Cobra application.`,
 
 		swapFreePercent := (mem.SwapFree / mem.SwapTotal) * 100
 
-		icinga := types.NewIcinga(fmt.Sprintf("swap free: %d%%", swapFreePercent), warning, critical)
+		icinga := icinga.NewIcinga(fmt.Sprintf("swap free: %d%%", swapFreePercent), warning, critical)
 
-		icinga.InlineEvaluate(float64(mem.UsedPercent),
+		icinga.Evaluate(float64(mem.UsedPercent),
 			"swap usage has exceed its limits",
 			fmt.Sprintf("swap usage is ok: usage %d%%", swapFreePercent),
 			fmt.Sprintf("swap usage has exceed its limits of %s with %d%%", warning, swapFreePercent),
 			fmt.Sprintf("swap usage has exceed its limits of %s with %d%%", critical, swapFreePercent),
-			verbose,
 		)
 
 		icinga.AddPerfData(float64(swapFreePercent), "swap")
