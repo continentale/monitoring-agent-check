@@ -42,6 +42,11 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 
+		if mem.SwapTotal == 0 {
+			fmt.Println("UNKNOWN - Swap is disabled")
+			os.Exit(3)
+		}
+
 		swapFreePercent := (mem.SwapFree / mem.SwapTotal) * 100
 
 		icinga := icinga.NewIcinga(fmt.Sprintf("swap free: %d%%", swapFreePercent), warning, critical)
