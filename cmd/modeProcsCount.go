@@ -48,9 +48,9 @@ to quickly create a Cobra application.`,
 		icinga.Evaluate(
 			float64(len(procs)),
 			"proc count does not match the threshold",
-			"proc count match",
-			"proc count is warning. Does not find thresholds for filter "+strings.Join(filter, ","),
-			"proc count is critical. Does not find thresholds for filter "+strings.Join(filter, ","),
+			fmt.Sprintf("proc count match. Found: %d", len(procs)),
+			fmt.Sprintf("proc count is warning. Found %d. Does not fit thresholds for filter %s", len(procs), strings.Join(filter, ",")),
+			fmt.Sprintf("proc count is critical. Found %d. Does not fit thresholds for filter %s", len(procs), strings.Join(filter, ",")),
 		)
 		icinga.GenerateOutput(false)
 		os.Exit(icinga.ExitCode)

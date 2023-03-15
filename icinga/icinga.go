@@ -44,11 +44,11 @@ func (i *Icinga) GetStatus() int {
 }
 
 func (i *Icinga) Evaluate(value float64, problemMessagem, outputOK, outputWarning, outputCritical string) {
-	if ((value <= i.Critical.Down || value >= i.Critical.Up) && !i.Critical.Negate) ||
+	if ((value < i.Critical.Down || value > i.Critical.Up) && !i.Critical.Negate) ||
 		((value >= i.Critical.Down && value <= i.Critical.Up) && i.Critical.Negate) {
 		i.setStatus(2, outputCritical, "")
 		i.PluginOutput = outputCritical
-	} else if ((value <= i.Warning.Down || value >= i.Warning.Up) && !i.Warning.Negate) ||
+	} else if ((value < i.Warning.Down || value > i.Warning.Up) && !i.Warning.Negate) ||
 		((value >= i.Warning.Down && value <= i.Warning.Up) && i.Warning.Negate) {
 		i.setStatus(1, outputWarning, "")
 		i.PluginOutput = outputWarning
