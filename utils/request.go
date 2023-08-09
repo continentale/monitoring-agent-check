@@ -30,7 +30,7 @@ func MakeRequest(endpoint string) ([]byte, error) {
 	return body, nil
 }
 
-func BuildURL(secure bool, endpoint string, port int, mode string, filter []string) string {
+func BuildFilterURL(secure bool, endpoint string, port int, mode string, filter []string) string {
 	protocol := "http"
 
 	if secure {
@@ -54,4 +54,14 @@ func BuildURL(secure bool, endpoint string, port int, mode string, filter []stri
 	}
 
 	return fmt.Sprintf("%s://%s:%d/api/v2/%s%s", protocol, endpoint, port, mode, readyFilter)
+}
+
+func BuildNamedURL(secure bool, endpoint string, port int, mode string, name string) string {
+	protocol := "http"
+
+	if secure {
+		protocol = "https"
+	}
+
+	return fmt.Sprintf("%s://%s:%d/api/v2/%s?name=%s", protocol, endpoint, port, mode, name)
 }
