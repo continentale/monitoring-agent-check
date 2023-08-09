@@ -23,7 +23,7 @@ var modeCPUUsage = &cobra.Command{
 	
 	./monitoring-agent --host localhost cpus usage`,
 	Run: func(cmd *cobra.Command, args []string) {
-		url := utils.BuildURL(secure, host, port, "cpus", filter)
+		url := utils.BuildFilterURL(secure, host, port, "cpus", filter)
 		if filter[0] != "" {
 			url += "&perCPU=" + strconv.FormatBool(perCPU)
 		} else {

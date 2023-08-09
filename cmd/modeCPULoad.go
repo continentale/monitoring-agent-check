@@ -30,7 +30,7 @@ var modeCPULoad = &cobra.Command{
 	./monitoring-agent --host localhost cpus load --perf=false
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		url := utils.BuildURL(secure, host, port, "load", filter)
+		url := utils.BuildFilterURL(secure, host, port, "load", filter)
 
 		if verbose {
 			log.Println("Used url:", url)
