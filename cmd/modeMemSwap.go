@@ -43,8 +43,8 @@ to quickly create a Cobra application.`,
 		}
 
 		if mem.SwapTotal == 0 {
-			fmt.Println("UNKNOWN - Swap is disabled")
-			os.Exit(3)
+			fmt.Println("OK - Swap is disabled")
+			os.Exit(0)
 		}
 
 		swapFreePercent := (mem.SwapFree / mem.SwapTotal) * 100
