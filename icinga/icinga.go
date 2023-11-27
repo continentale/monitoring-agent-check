@@ -198,5 +198,5 @@ func parseThreshold(threshold string) Threshold {
 }
 
 func (i *Icinga) AddPerfData(value float64, data string) {
-	i.PerfData += fmt.Sprintf("'%s'=%f;%f;%f;;", data, value, i.Warning.Up, i.Critical.Up)
+	i.PerfData += fmt.Sprintf("'%s'=%f;%f;%f;;, ", data, value, i.Warning.Up, i.Critical.Up)
 }
